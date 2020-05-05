@@ -22,10 +22,13 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE); 
     } 
        
-    // Forcefully attaching socket to the port 8080 
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
-                                                  &opt, sizeof(opt))) 
-    { 
+    // Forcefully attaching socket to the port 8080
+    // https://stackoverflow.com/questions/58599070/socket-programming-setsockopt-protocol-not-available#comment103510725_58599070
+    // https://stackoverflow.com/a/14388707
+    if (
+        setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) ||
+        setsockopt(server_fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt))
+    ) {
         perror("setsockopt"); 
         exit(EXIT_FAILURE); 
     } 
